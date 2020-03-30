@@ -19,7 +19,7 @@ nhap:
 mov ah, 01h
 int 21h   
 cmp al, 13
-je xuat  
+je soHex  
 xor dx, dx  
 mov ah, 0 
 sub ax, 30h
@@ -31,9 +31,14 @@ add ax, cx
 mov num, ax
 jmp nhap
   
-soHex:
-mov ax, num    
-mov ah, 0
+soHex:        
+
+;thong bao in ket qua
+lea dx, tb2
+mov ah, 09h
+int 21h
+
+mov ax, num 
 mov bx, 16        
 xor cx, cx
 chia:
@@ -43,11 +48,32 @@ push dx
 inc cx
 cmp al, 0
 je inkq
-jmp chia  
-
+jmp chia        
+      
 inkq:
 pop dx
-add dl, 30h
+cmp dl, 9
+ja big
+jb small
+je small
+tiep:
 mov ah, 02h
 int 21h 
 loop inkq
+
+cmp cx, 0
+je exit  
+       
+big:
+add dl, 55
+jmp tiep
+small:
+add dl, 48
+jmp tiep
+       
+;exit
+exit: 
+mov ah, 4ch
+int 21h        
+
+;success
